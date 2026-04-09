@@ -36,4 +36,24 @@ VALIDATE $? "Installing NodeJS"
 useradd expense
 VALIDATE $? "Creating Expense User"
 mkdir /app
-VALIDATE $? "Creating App Directory"
+VALIDATE $? "Creating Application Folder"
+curl -o /tmp/backend.zip https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+VALIDATE $? "Downloading Backend Application Code"
+cd /app
+unzip /tmp/backend.zip
+cd /app
+npm install
+VALIDATE $? "Installing Backend Application Dependencies"
+cp $SCRIPT_DIR/backend.service /etc/systemd/system/backend.service
+VALIDATE $? "Copying Backend Service File"
+systemctl daemon-reload
+VALIDATE $? "Reloading Systemd Daemon"
+systemctl start backend
+VALIDATE $? "Starting Backend Service"
+systemctl enable backend
+VALIDATE $? "Enabling Backend Service"
+dnf install mysql -y &>> $LOG_FILE
+VALIDATE $? "Installing MySQL Client"
+
+
+
