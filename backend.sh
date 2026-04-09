@@ -27,13 +27,13 @@ VALIDATE(){ # functions receive inputs through args just like shell script args
     fi
 }
 
-dnf install mysql-server -y &>> $LOG_FILE
-VALIDATE $? "Installing MySQL Server"
-systemctl enable mysqld &>> $LOG_FILE
-VALIDATE $? "Enabling MySQL Service"
-systemctl start mysqld 
-VALIDATE $? "Starting MySQL Service"
-mysql_secure_installation --set-root-pass ExpenseApp@1
-VALIDATE $? "Securing MySQL Installation"
-
-
+dnf module disable nodejs -y &>> $LOG_FILE
+VALIDATE $? "Disabling NodeJS Module"
+dnf module enable nodejs:20 -y &>> $LOG_FILE
+VALIDATE $? "Enabling NodeJS 20 Module"
+dnf install nodejs -y &>> $LOG_FILE
+VALIDATE $? "Installing NodeJS"
+useradd expense
+VALIDATE $? "Creating Expense User"
+mkdir /app
+VALIDATE $? "Creating App Directory"
