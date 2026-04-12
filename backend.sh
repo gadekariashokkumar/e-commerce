@@ -54,6 +54,9 @@ systemctl enable backend
 VALIDATE $? "Enabling Backend Service"
 dnf install mysql -y &>> $LOG_FILE
 VALIDATE $? "Installing MySQL Client"
-
+mysql -h my-sql.gadekari.store -uroot -pExpenseApp@1 < /app/schema/backend.sql
+VALIDATE $? "Creating Backend Database and Tables"
+systemctl restart backend
+VALIDATE $? "Restarting Backend Service"
 
 
