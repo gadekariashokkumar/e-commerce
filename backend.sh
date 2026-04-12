@@ -36,6 +36,7 @@ dnf install nodejs -y &>> $LOG_FILE
 VALIDATE $? "Installing NodeJS"
 useradd expense
 VALIDATE $? "Creating Expense User"
+exit 1
 mkdir /app
 VALIDATE $? "Creating Application Folder"
 curl -o /tmp/backend.zip https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
