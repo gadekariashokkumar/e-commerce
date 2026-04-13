@@ -28,21 +28,43 @@ VALIDATE(){ # functions receive inputs through args just like shell script args
     fi
 }
 
+# Install nginx
 dnf install nginx -y &>> $LOG_FILE
+VALIDATE $? "Installing Nginx"
+
+# Enable nginx
 systemctl enable nginx &>> $LOG_FILE
+VALIDATE $? "Enabling Nginx"
+
+# Start nginx
 systemctl start nginx &>> $LOG_FILE
-validate $? "Installing and Starting Nginx"
+VALIDATE $? "Starting Nginx"
 
+# Clean old content
 rm -rf /usr/share/nginx/html/*
+VALIDATE $? "Removing Old Content"
 
-curl -o /tmp/frontend.zip https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
-VALIDATE $? "Downloading Frontend Application Code"
-unzip /tmp/frontend.zip
-VALIDATE $? "Extracting Frontend Application Code"
+# Download frontend
+curl -L -o /tmp/frontend.zip https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip &>> $LOG_FILE
+VALIDATE $? "Downloading Frontend Code"
 
-rm -rf /etc/nginx/nginx.conf
-cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
+# Extract frontend
+unzip -o /tmp/frontend.zip -d /usr/share/nginx/html &>> $LOG_FILE
+VALIDATE $? "Extracting Frontend Code"
+
+# Backup default nginx config (important safety)
+if [ -f /etc/nginx/nginx.conf ]; then
+    cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+fi
+
+# Copy your custom config
+cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf &>> $LOG_FILE
 VALIDATE $? "Copying nginx.conf"
 
-systemctl restart nginx 
+# Validate nginx config BEFORE restart
+nginx -t &>> $LOG_FILE
+VALIDATE $? "Validating Nginx Config"
+
+# Restart nginx
+systemctl restart nginx &>> $LOG_FILE
 VALIDATE $? "Restarting Nginx"
