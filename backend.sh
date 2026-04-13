@@ -34,7 +34,7 @@ dnf module enable nodejs:20 -y &>> $LOG_FILE
 VALIDATE $? "Enabling NodeJS 20 Module"
 dnf install nodejs -y &>> $LOG_FILE
 VALIDATE $? "Installing NodeJS"
-useradd expense
+id expense &>> $LOG_FILE || useradd expense
 VALIDATE $? "Creating Expense User"
 mkdir /app
 VALIDATE $? "Creating Application Folder"
