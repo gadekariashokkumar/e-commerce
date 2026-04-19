@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_HOST="my-sql.gadekari.store"   # or use 172.31.39.106 directly
+DB_HOST="mysql.gadekari.store"   # or use 172.31.39.106 directly
 DB_USER="root"
 DB_PASS="ExpenseApp@1"
 DB_SCHEMA="/app/schema/backend.sql"
