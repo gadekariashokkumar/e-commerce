@@ -61,6 +61,14 @@ systemctl enable backend
 VALIDATE $? "Enabling Backend Service"
 dnf install mysql -y &>> $LOG_FILE
 VALIDATE $? "Installing MySQL Client"
+# Connectivity check before running schema
+nc -z -v $DB_HOST 3306 &>> $LOG_FILE
+if [ $? -ne 0 ]; then
+    echo -e "Connecting to MySQL at $DB_HOST:3306 ... $R FAILURE $N" | tee -a $LOG_FILE
+    exit 1
+else
+    echo -e "Connecting to MySQL at $DB_HOST:3306 ... $G SUCCESS $N" | tee -a $LOG_FILE
+fi
 mysql -h $DB_HOST -u$DB_USER -p$DB_PASS < $DB_SCHEMA
 VALIDATE $? "Creating Backend Database and Tables"
 systemctl restart backend
