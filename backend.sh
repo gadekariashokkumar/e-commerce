@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_HOST="mysql.gadekari.store"   # or use 172.31.39.106 directly
+DB_HOST="my-sql.gadekari.store"   # or use 172.31.39.106 directly
 DB_USER="root"
 DB_PASS="ExpenseApp@1"
 DB_SCHEMA="/app/schema/backend.sql"
@@ -61,7 +61,7 @@ systemctl enable backend
 VALIDATE $? "Enabling Backend Service"
 dnf install mysql -y &>> $LOG_FILE
 VALIDATE $? "Installing MySQL Client"
-mysql -h my-sql.gadekari.store -uroot -pExpenseApp@1 < /app/schema/backend.sql
+mysql -h $DB_HOST -u$DB_USER -p$DB_PASS < $DB_SCHEMA
 VALIDATE $? "Creating Backend Database and Tables"
 systemctl restart backend
 VALIDATE $? "Restarting Backend Service"
